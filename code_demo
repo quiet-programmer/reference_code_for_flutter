@@ -114,4 +114,92 @@ Widget getImageAsset() {
 
   Form(
         key: _formKey,
-  )
+  );
+///////////////////////////////////////////////////////////////////
+///
+///
+///////////////// List view with builder and card view/////////////
+
+ListView getListView() {
+
+    TextStyle titleStyle = Theme.of(context).textTheme.subhead;
+
+    return ListView.builder(
+
+      itemCount: count,
+      itemBuilder: (BuildContext context, int position) {
+        return Card(
+          color: Colors.white,
+          elevation: 2.0,
+          child: ListTile(
+            leading: CircleAvatar(
+              backgroundColor: getPriorityColor(this.noteList[position].priority),
+              child: getPriorityIcon(this.noteList[position].priority)
+            ),
+            title: Text(this.noteList[position].title,),
+            subtitle: Text(this.noteList[position].date),
+            trailing: GestureDetector(
+              child: Icon(Icons.delete, color: Colors.grey,),
+              onTap: (){
+                _delete(context, noteList[position]);
+              },
+            ),
+            onTap: () {
+              debugPrint("go to note edit screen");
+              navigateScreen(this.noteList[position],'Edit Note');
+            },
+          ),
+        );
+      }
+    );
+  }
+  ///////////////////////////////////////////////////////////////////
+  ///
+  ///
+  ////////////// Fucntion and Code to Navigate to another screen////
+  
+  void navigateScreen(Note note, String title) async{
+    // navigation code
+    bool result = await Navigator.push(context, MaterialPageRoute(builder: (context){
+      return NoteDetail(note, title);
+    }));
+
+    if(result == true){
+      updateListView();
+    }
+  }
+
+/////////////// code to navigate only if you dont want to use a funciton
+  Navigator.push(context, MaterialPageRoute(builder: (context){
+      return NoteDetail(note, title);
+  }
+  ////////////////////////////////////////////////////////////////////////
+  ///
+  ///
+  //////////////// TExt Field with no validateion////////////////////////
+  
+  TextField(
+    controller: descriptionController,
+    style: textStyle,
+    onChanged: (value) {
+    debugPrint('Description is being Tasked');
+        updateDescription();
+    },
+       decoration: InputDecoration(
+        labelText: "Description",
+        labelStyle: textStyle,
+        border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(5.0))),
+  ),
+
+  /////////////////////////////////////////////////////////////////////
+  ///
+  ///
+  /////////////////////// go back code ///////////////////////////////
+  
+  void moveToLastScreen() {
+    //function to go back
+    Navigator.pop(context, true);
+  }
+
+  ///////////////////////////////////////////////////////////////////
